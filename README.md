@@ -1,5 +1,3 @@
-# Template for tasks of C++ course
+# Signals
 
-> NOTE: Change project name in CMakeLists.txt for another task
-
-> NOTE: Change init-repo.sh:21 for another task
+Необходимо реализуйте сигналы похожие на те, что из библиотеки qt.
