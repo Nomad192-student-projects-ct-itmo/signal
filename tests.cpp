@@ -69,8 +69,7 @@ TEST(signal_testing, connection_move_ctor) {
 TEST(signal_testing, connection_destructor) {
   signals::signal<void()> sig;
   uint32_t got1 = 0;
-  auto conn1 = std::make_unique<signals::signal<void()>::connection>(
-      sig.connect([&] { ++got1; }));
+  auto conn1 = std::make_unique<signals::signal<void()>::connection>(sig.connect([&] { ++got1; }));
   uint32_t got2 = 0;
   auto conn2 = sig.connect([&] { ++got2; });
 
