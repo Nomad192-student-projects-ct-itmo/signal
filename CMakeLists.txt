@@ -1,5 +1,10 @@
+<<<<<<< HEAD
 cmake_minimum_required(VERSION 3.21)
 project(template)
+=======
+cmake_minimum_required(VERSION 3.12)
+project(signal)
+>>>>>>> 48e5329 (Fixing some CMake)
 
 set(CMAKE_CXX_STANDARD 20)
 
