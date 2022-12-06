@@ -25,6 +25,24 @@ struct signal<void(Args...)> {
       sig->connections.push_back(*this);
     }
 
+    void my_move(connection&& other) {
+      sig = other.sig;
+      func = std::move(other.func);
+      if (sig != nullptr)
+        this->link(other); /// insertion after "other"
+      other.disconnect();
+    }
+
+    void soft_disconnect() {
+      sig = nullptr;
+      func = std::move(slot());
+    }
+
+    void operator()(Args... args) const {
+      if (sig != nullptr)
+        func(std::forward<Args>(args)...);
+    }
+
   public:
     connection() = default;
 
@@ -39,14 +57,6 @@ struct signal<void(Args...)> {
       return *this;
     }
 
-    void my_move(connection&& other) {
-      sig = other.sig;
-      func = std::move(other.func);
-      if (sig != nullptr)
-        this->link(other); /// insertion after "other"
-      other.disconnect();
-    }
-
     void disconnect() {
       if (sig != nullptr) {
         for (auto it = sig->tail; it != nullptr; it = it->prev)
@@ -56,16 +66,6 @@ struct signal<void(Args...)> {
         this->unlink();
         soft_disconnect();
       }
-    }
-
-    void soft_disconnect() {
-      sig = nullptr;
-      func = std::move(slot());
-    }
-
-    void operator()(Args... args) const {
-      if (sig != nullptr)
-        func(std::forward<Args>(args)...);
     }
 
     ~connection() {
