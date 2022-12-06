@@ -18,12 +18,15 @@ template <typename... Args>
 struct signal<void(Args...)> {
   using slot = std::function<void(Args...)>;
 
-  struct connection : intrusive::list_element<connection_tag> {
-    connection() = default;
-
+  class connection : public intrusive::list_element<connection_tag> {
+    template <typename T>
+    friend struct signal;
     connection(signal* sig_, slot func_) : sig(sig_), func(std::move(func_)) {
       sig->connections.push_back(*this);
     }
+
+  public:
+    connection() = default;
 
     connection(connection&& other) {
       my_move(std::move(other));
@@ -57,11 +60,12 @@ struct signal<void(Args...)> {
 
     void soft_disconnect() {
       sig = nullptr;
+      func = std::move(slot());
     }
 
     void operator()(Args... args) const {
       if (sig != nullptr)
-        func(args...);
+        func(std::forward<Args>(args)...);
     }
 
     ~connection() {
@@ -89,7 +93,7 @@ struct signal<void(Args...)> {
     while (holder.current != connections.end()) {
       auto copy = holder.current;
       holder.current++;
-      (*copy)(args...);
+      (*copy)(std::forward<Args>(args)...);
       if (holder.sig == nullptr) {
         return;
       }
