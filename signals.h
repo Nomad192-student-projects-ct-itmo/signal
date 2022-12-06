@@ -35,7 +35,7 @@ struct signal<void(Args...)> {
 
     void soft_disconnect() {
       sig = nullptr;
-      func = std::move(slot());
+      func = slot(); /// move
     }
 
     void operator()(Args... args) const {
