@@ -2,8 +2,7 @@
 
 intrusive::list_base::list_base(const list_base&) {}
 
-intrusive::list_base::list_base(list_base&& old)
-    : prev(old.prev), next(old.next) {
+intrusive::list_base::list_base(list_base&& old) : prev(old.prev), next(old.next) {
   if (old.prev != nullptr) {
     old.prev->next = this;
   }

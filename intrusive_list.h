@@ -230,8 +230,7 @@ private:
   }
 
 public:
-  void splice(const_iterator pos, list& other, const_iterator first,
-              const_iterator last) {
+  void splice(const_iterator pos, list& other, const_iterator first, const_iterator last) {
     if (last == pos) // this == &other &&? why then other?
       return;
 
